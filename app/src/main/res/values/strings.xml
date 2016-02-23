@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Season Ticket Draft</string>
+    <string name="shuffle_participants">Shuffle Participants</string>
+    <string name="draft_order">Draft Order</string>
+</resources>
