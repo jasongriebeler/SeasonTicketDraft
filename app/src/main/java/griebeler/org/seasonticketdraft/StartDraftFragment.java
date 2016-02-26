@@ -39,7 +39,7 @@ public class StartDraftFragment extends Fragment {
         (rootView.findViewById(R.id.start_draft_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                firebase.child("original-draft-order").setValue(participantList);
+                firebase.child("draft/draw").setValue(participantList);
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, new DraftFragment())

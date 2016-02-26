@@ -3,4 +3,5 @@
     <string name="shuffle_participants">Shuffle Participants</string>
     <string name="start_draft">Start Draft</string>
     <string name="draft_order">Draft Order</string>
+    <string name="draft">Draft</string>
 </resources>

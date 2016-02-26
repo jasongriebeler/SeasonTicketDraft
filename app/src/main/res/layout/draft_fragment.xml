@@ -1,24 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:layout_height="match_parent">
 
-    <!--
     <TextView
         android:id="@+id/season_ticket_draft_heading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Draft Order" />
-    -->
-
+        android:text="@string/draft_order"
+        android:layout_alignParentTop="true" />
 
     <ListView
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/draft_order_listview" />
+        android:id="@+id/draft_order_listview"
+        android:layout_below="@+id/season_ticket_draft_heading"
+        android:layout_above="@+id/draft_button"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/draft"
+        android:id="@+id/draft_button"
+        android:layout_alignParentBottom="true"
+        android:textAppearance="?android:attr/textAppearanceButton" />
 
 
-
-</LinearLayout>
+</RelativeLayout>

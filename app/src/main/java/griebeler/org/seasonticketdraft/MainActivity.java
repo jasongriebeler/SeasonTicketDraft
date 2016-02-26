@@ -17,7 +17,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         Firebase firebase = new Firebase("https://season-ticket-draft.firebaseio.com/");
-        firebase.child("original-draft-order").addValueEventListener(new ValueEventListener() {
+        firebase.child("draft").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue() == null){
@@ -36,9 +36,5 @@ public class MainActivity extends Activity {
 
             }
         });
-
-        if (savedInstanceState == null) {
-
-        }
     }
 }

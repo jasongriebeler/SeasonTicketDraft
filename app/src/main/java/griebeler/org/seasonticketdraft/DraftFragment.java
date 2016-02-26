@@ -3,7 +3,6 @@ package griebeler.org.seasonticketdraft;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DraftFragment extends Fragment {
@@ -31,36 +31,88 @@ public class DraftFragment extends Fragment {
         ListView listView = (ListView)draftView.findViewById(R.id.draft_order_listview);
         listView.setAdapter(adapter);
 
+        draftView.findViewById(R.id.draft_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebase.child("draft/snake").addListenerForSingleValueEvent(new DraftButtonValueEventListener(firebase));
+
+            }
+        });
+
         return draftView;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        firebase.child("original-draft-order").addValueEventListener(new OriginalDraftOrderValueEventListener(getView()));
+        firebase.child("draft").addListenerForSingleValueEvent(new PopulateSnakeDraftListener(getView()));
     }
 
-    private class OriginalDraftOrderValueEventListener implements ValueEventListener{
+    private class AttachToListViewListener implements ValueEventListener{
         private View view;
 
-        public OriginalDraftOrderValueEventListener(View view){
+        public AttachToListViewListener(View view){
             this.view = view;
         }
 
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            Log.i("data changed", dataSnapshot.getValue().toString());
-            ListView draftOrderView = (ListView)view.findViewById(R.id.draft_order_listview);
+
+            ListView draftOrderView = (ListView)getView().findViewById(R.id.draft_order_listview);
             ArrayAdapter<String> draftOrderAdapter = (ArrayAdapter<String>)draftOrderView.getAdapter();
             draftOrderAdapter.clear();
+
+            List<DraftPosition> draftPositions = (List<DraftPosition>) dataSnapshot.getValue();
+
             draftOrderAdapter.addAll((List<String>)dataSnapshot.getValue());
             draftOrderAdapter.notifyDataSetChanged();
+
         }
 
         @Override
         public void onCancelled(FirebaseError firebaseError) {
-            Log.i("cancelled", firebaseError.toString());
+
         }
     }
 
+    private class PopulateSnakeDraftListener implements ValueEventListener {
+        private View view;
+
+        public PopulateSnakeDraftListener(View view) {
+            this.view = view;
+        }
+
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            if(!dataSnapshot.child("snake").exists()) {
+                List<DraftPosition> snake = generateSnake((List<String>) dataSnapshot.child("draw").getValue());
+                firebase.child("draft/snake").setValue(snake);
+            }
+
+            firebase.child("draft/snake").addValueEventListener(new AttachToListViewListener(view));
+        }
+
+        private List<DraftPosition> generateSnake(List<String> draw){
+            List<DraftPosition> snake = new ArrayList<>();
+            int drawIndex = 0;
+            for(int k=0; k < 80; k++){
+                if(drawIndex == draw.size()){
+                    Collections.reverse(draw);
+                    drawIndex = 0;
+                }
+                snake.add(new DraftPosition()
+                        .setName(draw.get(drawIndex))
+                        .setCompleted(false)
+                        .setPosition(k));
+                drawIndex++;
+            }
+            return snake;
+        }
+
+
+        @Override
+        public void onCancelled(FirebaseError firebaseError) {
+
+        }
+    }
 }
