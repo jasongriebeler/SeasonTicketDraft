@@ -33,7 +33,7 @@ public class PopulateSnakeDraftListener implements ValueEventListener {
     private List<DraftPosition> generateSnake(List<String> draw){
         List<DraftPosition> snake = new ArrayList<>();
         int drawIndex = 0;
-        for(int k=0; k < 80; k++){
+        for(int k=0; k <= 81; k++){
             if(drawIndex == draw.size()){
                 Collections.reverse(draw);
                 drawIndex = 0;

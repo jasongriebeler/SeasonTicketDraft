@@ -43,4 +43,5 @@ public class DraftFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         firebase.child("draft").addListenerForSingleValueEvent(new PopulateSnakeDraftListener(firebase, getView()));
     }
+
 }

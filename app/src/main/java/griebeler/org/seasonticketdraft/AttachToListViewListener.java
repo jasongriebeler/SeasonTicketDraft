@@ -8,6 +8,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AttachToListViewListener implements ValueEventListener {
@@ -20,15 +21,29 @@ public class AttachToListViewListener implements ValueEventListener {
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
 
-        ListView draftOrderView = (ListView)view.findViewById(R.id.draft_order_listview);
+        final ListView draftOrderView = (ListView)view.findViewById(R.id.draft_order_listview);
         ArrayAdapter<String> draftOrderAdapter = (ArrayAdapter<String>)draftOrderView.getAdapter();
         draftOrderAdapter.clear();
 
-        List<DraftPosition> draftPositions = (List<DraftPosition>) dataSnapshot.getValue();
+        List<String> items = new ArrayList<>();
 
-        draftOrderAdapter.addAll((List<String>)dataSnapshot.getValue());
+        int position = Integer.MAX_VALUE;
+
+        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+            DraftPosition draftPosition = snapshot.getValue(DraftPosition.class);
+            if(draftPosition.isCompleted()) {
+                items.add(draftPosition.getName() + " - drafted");
+            } else {
+                items.add(draftPosition.getName());
+                if(draftPosition.getPosition() < position)
+                    position = draftPosition.getPosition();
+            }
+        }
+
+        draftOrderAdapter.addAll(items);
         draftOrderAdapter.notifyDataSetChanged();
 
+        draftOrderView.smoothScrollToPositionFromTop(position, 128  * 3);
     }
 
     @Override
