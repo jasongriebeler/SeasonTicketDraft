@@ -28,5 +28,4 @@
         android:layout_alignParentBottom="true"
         android:textAppearance="?android:attr/textAppearanceButton" />
 
-
 </RelativeLayout>

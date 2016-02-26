@@ -7,6 +7,15 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.opencsv.CSVReader;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends Activity {
 
@@ -16,7 +25,38 @@ public class MainActivity extends Activity {
         Firebase.setAndroidContext(this);
         setContentView(R.layout.activity_main);
 
-        Firebase firebase = new Firebase("https://season-ticket-draft.firebaseio.com/");
+        final Firebase firebase = new Firebase("https://season-ticket-draft.firebaseio.com/");
+        firebase.child("draft/schedule").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(!dataSnapshot.exists()){
+                    InputStream scheduleStream = getResources().openRawResource(R.raw.schedule);
+                    CSVReader csv = new CSVReader(new InputStreamReader(scheduleStream));
+                    Map<String, Game> schedule = new HashMap<>();
+                    try {
+                        for(String[] row : csv.readAll()){
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+                            Game game = new Game();
+                            game.setDate(dateFormat.parse(row[0]));
+                            if(StringUtils.isNotBlank(row[1]))
+                                game.setTime(timeFormat.parse(row[1]));
+                            game.setOpponent(row[2]);
+                            schedule.put(row[0], game);
+                            firebase.child("draft/schedule").setValue(schedule);
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
         firebase.child("draft").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
