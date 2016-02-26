@@ -1,9 +1,20 @@
 package griebeler.org.seasonticketdraft;
 
+import java.util.Date;
+
 public class DraftPosition {
     private String name;
     private int position;
     private boolean completed;
+    private Date dateTimeDate;
+
+    public Date getDateTimeDate() {
+        return dateTimeDate;
+    }
+
+    public void setDateTimeDate(Date dateTimeDate) {
+        this.dateTimeDate = dateTimeDate;
+    }
 
     public String getName() {
         return name;
