@@ -3,9 +3,9 @@ package griebeler.org.seasonticketdraft;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +13,14 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.ListView;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class DraftFragment extends Fragment {
@@ -37,8 +42,47 @@ public class DraftFragment extends Fragment {
                 DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        Log.i("dialog date set", "YOU PICKED: " + year + " | " + monthOfYear + " | " + dayOfMonth);
-                        new AlertDialog.Builder(getActivity()).setTitle("ERROR").setMessage("GAME TAKEN").create().show();
+                        Calendar cal = Calendar.getInstance();
+                        cal.clear();
+                        cal.set(Calendar.YEAR, year);
+                        cal.set(Calendar.MONTH, monthOfYear);
+                        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                        firebase.child("draft/schedule/" + dateFormat.format(cal.getTime())).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot scheduleSnapshot) {
+                                if (!scheduleSnapshot.exists())
+                                    new AlertDialog.Builder(getActivity()).setTitle("Error").setMessage("No Game That Day").create().show();
+                                else{
+                                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+                                    final Game game = scheduleSnapshot.getValue(Game.class);
+
+                                    if(game.isSelected()){
+                                        new AlertDialog.Builder(getActivity()).setTitle("Error").setTitle("Game already selected by: " + game.getSelectedBy());
+                                    }else {
+                                        new AlertDialog.Builder(getActivity())
+                                                .setTitle("Verify")
+                                                .setMessage(game.getOpponent() + " on " + dateFormat.format(game.getDate()) + " at " + timeFormat.format(game.getTime()))
+                                                .setPositiveButton("Select Game", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        firebase.child("draft/snake").addListenerForSingleValueEvent(new DraftButtonValueEventListener(firebase, game));
+                                                    }
+                                                })
+                                                .create()
+                                                .show();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(FirebaseError firebaseError) {
+
+                            }
+                        });
                     }
                 }, 2016, 03, 01);
 

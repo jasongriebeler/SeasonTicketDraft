@@ -7,6 +7,15 @@ public class DraftPosition {
     private int position;
     private boolean completed;
     private Date dateTimeDate;
+    private Game game;
+
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+    }
 
     public Date getDateTimeDate() {
         return dateTimeDate;

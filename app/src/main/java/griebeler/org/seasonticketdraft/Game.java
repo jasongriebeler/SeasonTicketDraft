@@ -6,6 +6,24 @@ public class Game {
     private String opponent;
     private Date date;
     private Date time;
+    private boolean selected;
+    private String selectedBy;
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public String getSelectedBy() {
+        return selectedBy;
+    }
+
+    public void setSelectedBy(String selectedBy) {
+        this.selectedBy = selectedBy;
+    }
 
     public Date getDate() {
         return date;

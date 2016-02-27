@@ -11,9 +11,11 @@ import java.util.List;
 
 public class DraftButtonValueEventListener implements ValueEventListener{
     private final Firebase firebase;
+    private final Game game;
 
-    public DraftButtonValueEventListener(Firebase firebase){
+    public DraftButtonValueEventListener(Firebase firebase, Game game){
         this.firebase = firebase;
+        this.game = game;
     }
 
     @Override
@@ -27,6 +29,7 @@ public class DraftButtonValueEventListener implements ValueEventListener{
             if(!draftMarked && !draftPosition.isCompleted()){
                 draftPosition.setCompleted(true);
                 draftPosition.setDateTimeDate(new Date());
+                draftPosition.setGame(game);
                 draftMarked = true;
             }
             draftPositions.add(draftPosition);
