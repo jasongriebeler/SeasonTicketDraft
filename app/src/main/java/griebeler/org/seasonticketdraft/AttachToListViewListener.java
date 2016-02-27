@@ -32,7 +32,7 @@ public class AttachToListViewListener implements ValueEventListener {
         for(DataSnapshot snapshot : dataSnapshot.getChildren()){
             DraftPosition draftPosition = snapshot.getValue(DraftPosition.class);
             if(draftPosition.isCompleted()) {
-                items.add(draftPosition.getName() + " - drafted");
+                items.add(draftPosition.getName() + " - drafted - " + draftPosition.getGame().getFormattedDate() + " (" + draftPosition.getGame().getOpponent() + ")");
             } else {
                 items.add(draftPosition.getName());
                 if(draftPosition.getPosition() < position)

@@ -1,5 +1,8 @@
 package griebeler.org.seasonticketdraft;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Game {
@@ -8,6 +11,20 @@ public class Game {
     private Date time;
     private boolean selected;
     private String selectedBy;
+
+    @JsonIgnore
+    public String getFormattedDate(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormat.format(getDate());
+    }
+
+    @JsonIgnore
+    public String getFormattedTime(){
+        if(getTime() == null)
+            return "TBD";
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+        return timeFormat.format(getTime());
+    }
 
     public boolean isSelected() {
         return selected;

@@ -24,17 +24,23 @@ public class DraftButtonValueEventListener implements ValueEventListener{
 
         boolean draftMarked = false;
 
+        String selectedBy = null;
         for(DataSnapshot snapshot : dataSnapshot.getChildren()){
             DraftPosition draftPosition = snapshot.getValue(DraftPosition.class);
             if(!draftMarked && !draftPosition.isCompleted()){
                 draftPosition.setCompleted(true);
                 draftPosition.setDateTimeDate(new Date());
                 draftPosition.setGame(game);
+                selectedBy = draftPosition.getName();
                 draftMarked = true;
             }
             draftPositions.add(draftPosition);
         }
         firebase.child("draft/snake").setValue(draftPositions);
+
+        game.setSelectedBy(selectedBy);
+        game.setSelected(true);
+        firebase.child("draft/schedule/" + game.getFormattedDate()).setValue(game);
     }
 
     @Override

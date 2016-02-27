@@ -56,16 +56,14 @@ public class DraftFragment extends Fragment {
                                 if (!scheduleSnapshot.exists())
                                     new AlertDialog.Builder(getActivity()).setTitle("Error").setMessage("No Game That Day").create().show();
                                 else{
-                                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
                                     final Game game = scheduleSnapshot.getValue(Game.class);
 
                                     if(game.isSelected()){
-                                        new AlertDialog.Builder(getActivity()).setTitle("Error").setTitle("Game already selected by: " + game.getSelectedBy());
+                                        new AlertDialog.Builder(getActivity()).setTitle("Error").setMessage("Game already selected by: " + game.getSelectedBy()).show();
                                     }else {
                                         new AlertDialog.Builder(getActivity())
                                                 .setTitle("Verify")
-                                                .setMessage(game.getOpponent() + " on " + dateFormat.format(game.getDate()) + " at " + timeFormat.format(game.getTime()))
+                                                .setMessage(game.getOpponent() + " on " + game.getFormattedDate() + " at " + game.getFormattedTime())
                                                 .setPositiveButton("Select Game", new DialogInterface.OnClickListener() {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
