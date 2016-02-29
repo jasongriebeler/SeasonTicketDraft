@@ -31,7 +31,7 @@ public class StartDraftFragment extends Fragment {
 
         final List<String> participantList = getParticipantList();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.draft_participant_view, R.id.draft_participants_textview, participantList);
+        DraftInstanceAdapter adapter = new DraftInstanceAdapter(getActivity(), R.layout.draft_instance_view, R.id.participant_textview, participantList);
 
         ListView listView = (ListView) rootView.findViewById(R.id.draft_participants);
         listView.setAdapter(adapter);
