@@ -35,14 +35,15 @@ public class MainActivity extends Activity {
                     Map<String, Game> schedule = new HashMap<>();
                     try {
                         for(String[] row : csv.readAll()){
-                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            SimpleDateFormat dateInputFormat = new SimpleDateFormat("MM/dd/yy");
+                            SimpleDateFormat dateOutputFormat = new SimpleDateFormat("yyyy-MM-dd");
                             SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
                             Game game = new Game();
-                            game.setDate(dateFormat.parse(row[0]));
+                            game.setDate(dateInputFormat.parse(row[0]));
                             if(StringUtils.isNotBlank(row[1]))
                                 game.setTime(timeFormat.parse(row[1]));
                             game.setOpponent(row[2]);
-                            schedule.put(row[0], game);
+                            schedule.put(dateOutputFormat.format(game.getDate()), game);
                             firebase.child("draft/schedule").setValue(schedule);
                         }
                     } catch (Exception e) {
