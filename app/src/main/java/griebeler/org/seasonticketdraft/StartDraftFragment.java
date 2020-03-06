@@ -62,7 +62,7 @@ public class StartDraftFragment extends Fragment {
     private List<String> getParticipantList(){
         List participants = new ArrayList();
         participants.add("Griebeler");
-        participants.add("Burrows");
+        participants.add("DiLeonardi");
         participants.add("Rosens");
         participants.add("Gibbs");
         Collections.shuffle(participants);

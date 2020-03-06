@@ -30,8 +30,8 @@ public class DraftInstanceAdapter extends ArrayAdapter<String> {
 
         if(StringUtils.containsIgnoreCase(textView.getText(), "griebeler"))
             imageView.setImageResource(R.drawable.griebeler);
-        if(StringUtils.containsIgnoreCase(textView.getText(), "burrows"))
-            imageView.setImageResource(R.drawable.burrows);
+        if(StringUtils.containsIgnoreCase(textView.getText(), "dileonardi"))
+            imageView.setImageResource(R.drawable.dileonardi);
         if(StringUtils.containsIgnoreCase(textView.getText(), "gibbs"))
             imageView.setImageResource(R.drawable.gibbs);
         if(StringUtils.containsIgnoreCase(textView.getText(), "rosen"))

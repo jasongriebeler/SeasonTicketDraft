@@ -82,7 +82,7 @@ public class DraftFragment extends Fragment {
                             }
                         });
                     }
-                }, 2018, 03, 01);
+                }, 2020, 2, 1);
 
                 dialog.show();
 //                firebase.child("draft/snake").addListenerForSingleValueEvent(new DraftButtonValueEventListener(firebase));
